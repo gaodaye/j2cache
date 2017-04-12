@@ -131,7 +131,10 @@ public class CacheManager {
 	 */
 	public final static void set(int level, String name, Object key, Object value){
 		//System.out.println("SET => " + name+":"+key+"="+value);
-		if(name!=null && key != null && value!=null) {
+		if(name!=null && key != null) {
+			if (value == null) {
+				value=GfNull.gfNull;
+			}
             Cache cache =_GetCache(level, name, true);
             if (cache != null)
                 cache.put(key,value);
@@ -140,7 +143,10 @@ public class CacheManager {
 	
 	public final static void set(int level, String name, Object key, Object value, Integer expireInSec){
 		//System.out.println("SET => " + name+":"+key+"="+value);
-		if(name!=null && key != null && value!=null) {
+		if(name!=null && key != null) {
+			if (value == null) {
+				value=GfNull.gfNull;
+			}
             Cache cache =_GetCache(level, name, true);
             if (cache != null)
                 cache.put(key, value, expireInSec);
