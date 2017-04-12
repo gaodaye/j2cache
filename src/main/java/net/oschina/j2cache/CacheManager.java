@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.oschina.j2cache.ehcache.EhCacheProvider;
+import net.oschina.j2cache.map.MapCacheProvider;
 import net.oschina.j2cache.redis.RedisCacheProvider;
 
 /**
@@ -57,12 +58,15 @@ public class CacheManager {
 	}
 	
 	private final static CacheProvider getProviderInstance(String value) throws Exception {
+		if("map".equalsIgnoreCase(value))
+			return new MapCacheProvider();
 		if("ehcache".equalsIgnoreCase(value))
 			return new EhCacheProvider();
 		if("redis".equalsIgnoreCase(value))
 			return new RedisCacheProvider();
 		if("none".equalsIgnoreCase(value))
 			return new NullCacheProvider();
+		
 		return (CacheProvider)Class.forName(value).newInstance();
 	}
 	

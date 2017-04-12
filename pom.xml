@@ -5,10 +5,21 @@
 	<artifactId>j2cache</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>j2cache</name>
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>http://123.59.40.151:8081/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://123.59.40.151:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+ 	</distributionManagement>
 	<description>J2Cache is a 2 level Cache system, Using ehcache + redis</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
