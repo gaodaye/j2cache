@@ -193,8 +193,6 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
-        <module>hibernate3</module>
-        <module>hibernate4</module>
     </modules>
 
     <developers>
