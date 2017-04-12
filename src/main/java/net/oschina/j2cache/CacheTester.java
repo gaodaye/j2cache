@@ -38,18 +38,18 @@ public class CacheTester {
 					System.out.printf("[%s,%s,L%d]=>%s\n", obj.getRegion(), obj.getKey(), obj.getLevel(), obj.getValue());
 				} else if ("testget".equalsIgnoreCase(cmds[0])) {
 					cache.get(cmds[1], cmds[2]);
-
+					int count = Integer.valueOf(cmds[3]);
 					long a = System.currentTimeMillis();
-					for (int i = 0; i < 10000; i++) {
+					for (int i = 0; i < count; i++) {
 						cache.get(cmds[1], cmds[2]);
 					}
-					System.out.println("运行10000次getCache用时:" + (System.currentTimeMillis() - a) + "ms");
+					System.out.println("运行" + count + "次getCache用时:" + (System.currentTimeMillis() - a) + "ms");
 					Map<String, Object> map = new ConcurrentHashMap<>();
 					a = System.currentTimeMillis();
-					for (int i = 0; i < 10000; i++) {
+					for (int i = 0; i < count; i++) {
 						map.get(cmds[1]);
 					}
-					System.out.println("运行10000次getMap用时:" + (System.currentTimeMillis() - a) + "ms");
+					System.out.println("运行" + count + "次getMap用时:" + (System.currentTimeMillis() - a) + "ms");
 
 				} else if ("setTtl".equalsIgnoreCase(cmds[0])) {
 					cache.set(cmds[1], cmds[2], cmds[3], Integer.valueOf(cmds[4]));
