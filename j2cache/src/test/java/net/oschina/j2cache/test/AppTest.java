@@ -1,3 +1,4 @@
+package net.oschina.j2cache.test;
 import net.oschina.j2cache.util.SerializationUtils;
 
 import java.io.IOException;
