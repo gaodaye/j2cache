@@ -1,11 +1,11 @@
 package net.oschina.j2cache.redis;
 
+import java.io.Closeable;
+import java.util.Set;
+
 import net.oschina.j2cache.redis.client.RedisClient;
 import net.oschina.j2cache.redis.support.RedisClientFactoryAdapter;
 import redis.clients.jedis.BinaryJedisPubSub;
-
-import java.io.Closeable;
-import java.util.Set;
 
 /**
  * Redis cache 代理，用来获取 redis client
@@ -27,7 +27,8 @@ public class RedisCacheProxy implements Closeable {
         return this.redisClientFactoryAdapter.getRedisClientFactory().getResource();
     }
 
-    public void returnResource(RedisClient redisClient) {
+    @SuppressWarnings("unchecked")
+	public void returnResource(RedisClient redisClient) {
         this.redisClientFactoryAdapter.getRedisClientFactory().returnResource(redisClient);
     }
 

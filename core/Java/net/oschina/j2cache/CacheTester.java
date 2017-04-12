@@ -54,8 +54,8 @@ public class CacheTester {
 					System.out.println("查询10000次Map用时:" + (System.currentTimeMillis() - a) + "ms");
 
 				} else if ("set".equalsIgnoreCase(cmds[0])) {
-					// cache.set(cmds[1], cmds[2],cmds[3]);
-					cache.set(cmds[1], cmds[2], cmds[3], Integer.valueOf(cmds[4]));
+					 cache.set(cmds[1], cmds[2],null);
+//					cache.set(cmds[1], cmds[2], cmds[3], Integer.valueOf(cmds[4]));
 					System.out.printf("[%s,%s]<=%s\n", cmds[1], cmds[2], cmds[3]);
 				} else if ("evict".equalsIgnoreCase(cmds[0])) {
 					cache.evict(cmds[1], cmds[2]);

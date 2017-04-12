@@ -21,7 +21,6 @@ import java.util.List;
 import net.oschina.j2cache.Cache;
 import net.oschina.j2cache.CacheException;
 import net.oschina.j2cache.CacheExpiredListener;
-import net.oschina.j2cache.NeverCache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
@@ -73,7 +72,7 @@ public class EhCache implements Cache, CacheEventListener {
 				if (element != null) {
 					return element.getObjectValue();
 				} else {
-					return NeverCache.getInstance();
+					return null;
 				}
 			}
 		} catch (net.sf.ehcache.CacheException e) {

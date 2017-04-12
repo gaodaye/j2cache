@@ -77,8 +77,21 @@ public class RedisCacheChannel extends BinaryJedisPubSub implements CacheExpired
 		obj.setKey(key);
 		if (region != null && key != null) {
 			obj.setValue(CacheManager.get(LEVEL_1, region, key));
-			if (obj.getValue() == NeverCache.getInstance()) {
+			if (Gfnull.gfNull.equals(obj.getValue())) {
+				obj.setLevel(LEVEL_1);
+				obj.setCached(true);
+				obj.setValue(null);
+				return obj;
+			}
+			if (null == obj.getValue()) {
 				obj.setValue(CacheManager.get(LEVEL_2, region, key));
+				if (Gfnull.gfNull.equals(obj.getValue())) {
+					obj.setLevel(LEVEL_2);
+					obj.setCached(true);
+					obj.setValue(null);
+					CacheManager.set(LEVEL_1, region, key, obj.getValue());
+					return obj;
+				}
 				if (obj.getValue() != null) {
 					obj.setLevel(LEVEL_2);
 					obj.setCached(true);
@@ -105,20 +118,19 @@ public class RedisCacheChannel extends BinaryJedisPubSub implements CacheExpired
 	 */
 	public void set(String region, Object key, Object value) {
 		if (region != null && key != null) {
-			if (value == null)
-				evict(region, key);
-			else {
-				// 分几种情况
-				// Object obj1 = CacheManager.get(LEVEL_1, region, key);
-				// Object obj2 = CacheManager.get(LEVEL_2, region, key);
-				// 1. L1 和 L2 都没有
-				// 2. L1 有 L2 没有（这种情况不存在，除非是写 L2 的时候失败
-				// 3. L1 没有，L2 有
-				// 4. L1 和 L2 都有
-				_sendEvictCmd(region, key);// 清除原有的一级缓存的内容
-				CacheManager.set(LEVEL_1, region, key, value);
-				CacheManager.set(LEVEL_2, region, key, value);
+			if (value == null) {
+				value = Gfnull.gfNull;
 			}
+			// 分几种情况
+			// Object obj1 = CacheManager.get(LEVEL_1, region, key);
+			// Object obj2 = CacheManager.get(LEVEL_2, region, key);
+			// 1. L1 和 L2 都没有
+			// 2. L1 有 L2 没有（这种情况不存在，除非是写 L2 的时候失败
+			// 3. L1 没有，L2 有
+			// 4. L1 和 L2 都有
+			_sendEvictCmd(region, key);// 清除原有的一级缓存的内容
+			CacheManager.set(LEVEL_1, region, key, value);
+			CacheManager.set(LEVEL_2, region, key, value);
 		}
 		// log.info("write data to cache
 		// region="+region+",key="+key+",value="+value);
@@ -126,20 +138,19 @@ public class RedisCacheChannel extends BinaryJedisPubSub implements CacheExpired
 
 	public void set(String region, Object key, Object value, Integer expireInSec) {
 		if (region != null && key != null) {
-			if (value == null)
-				evict(region, key);
-			else {
-				// 分几种情况
-				// Object obj1 = CacheManager.get(LEVEL_1, region, key);
-				// Object obj2 = CacheManager.get(LEVEL_2, region, key);
-				// 1. L1 和 L2 都没有
-				// 2. L1 有 L2 没有（这种情况不存在，除非是写 L2 的时候失败
-				// 3. L1 没有，L2 有
-				// 4. L1 和 L2 都有
-				_sendEvictCmd(region, key);// 清除原有的一级缓存的内容
-				CacheManager.set(LEVEL_1, region, key, value, expireInSec);
-				CacheManager.set(LEVEL_2, region, key, value, expireInSec);
+			if (value == null) {
+				value = Gfnull.gfNull;
 			}
+			// 分几种情况
+			// Object obj1 = CacheManager.get(LEVEL_1, region, key);
+			// Object obj2 = CacheManager.get(LEVEL_2, region, key);
+			// 1. L1 和 L2 都没有
+			// 2. L1 有 L2 没有（这种情况不存在，除非是写 L2 的时候失败
+			// 3. L1 没有，L2 有
+			// 4. L1 和 L2 都有
+			_sendEvictCmd(region, key);// 清除原有的一级缓存的内容
+			CacheManager.set(LEVEL_1, region, key, value, expireInSec);
+			CacheManager.set(LEVEL_2, region, key, value, expireInSec);
 		}
 		// log.info("write data to cache
 		// region="+region+",key="+key+",value="+value);
