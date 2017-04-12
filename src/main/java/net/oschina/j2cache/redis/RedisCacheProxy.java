@@ -27,7 +27,8 @@ public class RedisCacheProxy implements Closeable {
         return this.redisClientFactoryAdapter.getRedisClientFactory().getResource();
     }
 
-    public void returnResource(RedisClient redisClient) {
+    @SuppressWarnings("unchecked")
+	public void returnResource(RedisClient redisClient) {
         this.redisClientFactoryAdapter.getRedisClientFactory().returnResource(redisClient);
     }
 

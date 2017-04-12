@@ -46,6 +46,10 @@ public class AppTest {
 
 class TestObject implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7830216131988592229L;
 	private String region;
 	private String key;
 

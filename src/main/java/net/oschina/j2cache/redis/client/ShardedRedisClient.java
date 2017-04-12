@@ -1031,7 +1031,8 @@ public class ShardedRedisClient implements RedisClient {
         return jedis.srandmember(key);
     }
 
-    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
     public List srandmember(byte[] key, int count) {
         return jedis.srandmember(key, count);
     }

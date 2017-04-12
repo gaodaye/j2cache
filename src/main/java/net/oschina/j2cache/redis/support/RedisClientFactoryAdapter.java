@@ -9,7 +9,8 @@ import java.io.IOException;
  */
 public class RedisClientFactoryAdapter {
 
-    private RedisClientFactory redisClientFactory;
+    @SuppressWarnings("rawtypes")
+	private RedisClientFactory redisClientFactory;
 
     private RedisPoolConfig poolConfig;
     private RedisPolicy policy = RedisPolicy.single; // 缓存策略，single:单机,sharded:分片,cluster:集群
@@ -233,11 +234,13 @@ public class RedisClientFactoryAdapter {
         this.policy = RedisPolicy.format(policy);
     }
 
-    public void setRedisClientFactory(RedisClientFactory redisClientFactory) {
+    @SuppressWarnings("rawtypes")
+	public void setRedisClientFactory(RedisClientFactory redisClientFactory) {
         this.redisClientFactory = redisClientFactory;
     }
 
-    public RedisClientFactory getRedisClientFactory() {
+    @SuppressWarnings("rawtypes")
+	public RedisClientFactory getRedisClientFactory() {
         return redisClientFactory;
     }
 
