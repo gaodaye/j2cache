@@ -5,73 +5,83 @@ package net.oschina.j2cache;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 缓存测试入口
+ * 
  * @author Winter Lau
  */
 public class CacheTester {
 
 	public static void main(String[] args) {
-		
-		System.setProperty("java.net.preferIPv4Stack", "true"); //Disable IPv6 in JVM
-		
+
+		System.setProperty("java.net.preferIPv4Stack", "true"); // Disable IPv6
+																// in JVM
+
 		CacheChannel cache = J2Cache.getChannel();
-		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
 
-	    do{
-	        try {
-	            System.out.print("> "); 
-	            System.out.flush();
-	            
-	            String line=in.readLine().trim();
-	            if(line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit"))
-	                break;
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-	            String[] cmds = line.split(" ");
-	            if("get".equalsIgnoreCase(cmds[0])){
-	            	CacheObject obj = cache.get(cmds[1], cmds[2]);
-	            	System.out.printf("[%s,%s,L%d]=>%s\n", obj.getRegion(), obj.getKey(), obj.getLevel(), obj.getValue());
-	            }
-	            else
-	            if("set".equalsIgnoreCase(cmds[0])){
-//	            	cache.set(cmds[1], cmds[2],cmds[3]);
-	            	cache.set(cmds[1], cmds[2],cmds[3], Integer.valueOf(cmds[4]));
-	            	System.out.printf("[%s,%s]<=%s\n",cmds[1], cmds[2], cmds[3]);
-	            }
-	            else
-	            if("evict".equalsIgnoreCase(cmds[0])){
-	            	cache.evict(cmds[1], cmds[2]);
-	            	System.out.printf("[%s,%s]=>null\n",cmds[1], cmds[2]);
-	            }
-	            else
-	            if("clear".equalsIgnoreCase(cmds[0])){
-	            	cache.clear(cmds[1]);
-	            	System.out.printf("Cache [%s] clear.\n" , cmds[1]);
-	            }
-	            else
-	            if("help".equalsIgnoreCase(cmds[0])){
-	            	printHelp();
-	            }
-	            else{
-	            	System.out.println("Unknown command.");
-	            	printHelp();
-	            }
-	        }
-	        catch(ArrayIndexOutOfBoundsException e) {
-            	System.out.println("Wrong arguments.");
-	        	printHelp();
-	        }
-	        catch(Exception e) {
-	        	e.printStackTrace();
-	        }
-	    }while(true);
-	    
-	    cache.close();
-	    
-	    System.exit(0);
+		do {
+			try {
+				System.out.print("> ");
+				System.out.flush();
+
+				String line = in.readLine().trim();
+				if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit"))
+					break;
+
+				String[] cmds = line.split(" ");
+				if ("get".equalsIgnoreCase(cmds[0])) {
+					CacheObject obj = cache.get(cmds[1], cmds[2]);
+					System.out.println("isCached:" + obj.isCached());
+					System.out.printf("[%s,%s,L%d]=>%s\n", obj.getRegion(), obj.getKey(), obj.getLevel(), obj.getValue());
+				} else if ("testget".equalsIgnoreCase(cmds[0])) {
+					cache.get(cmds[1], cmds[2]);
+					long a = System.currentTimeMillis();
+					for (int i = 0; i < 10000; i++) {
+						cache.get(cmds[1], cmds[2]);
+					}
+					System.out.println("查询10000次缓存用时:" + (System.currentTimeMillis() - a) + "ms");
+
+					Map<String, Object> map = new ConcurrentHashMap<>();
+					a = System.currentTimeMillis();
+					for (int i = 0; i < 10000; i++) {
+						map.get(cmds[1] + cmds[2]);
+					}
+					System.out.println("查询10000次Map用时:" + (System.currentTimeMillis() - a) + "ms");
+
+				} else if ("set".equalsIgnoreCase(cmds[0])) {
+					// cache.set(cmds[1], cmds[2],cmds[3]);
+					cache.set(cmds[1], cmds[2], cmds[3], Integer.valueOf(cmds[4]));
+					System.out.printf("[%s,%s]<=%s\n", cmds[1], cmds[2], cmds[3]);
+				} else if ("evict".equalsIgnoreCase(cmds[0])) {
+					cache.evict(cmds[1], cmds[2]);
+					System.out.printf("[%s,%s]=>null\n", cmds[1], cmds[2]);
+				} else if ("clear".equalsIgnoreCase(cmds[0])) {
+					cache.clear(cmds[1]);
+					System.out.printf("Cache [%s] clear.\n", cmds[1]);
+				} else if ("help".equalsIgnoreCase(cmds[0])) {
+					printHelp();
+				} else {
+					System.out.println("Unknown command.");
+					printHelp();
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.out.println("Wrong arguments.");
+				printHelp();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} while (true);
+
+		cache.close();
+
+		System.exit(0);
 	}
-	
+
 	private static void printHelp() {
 		System.out.println("Usage: [cmd] region key [value]");
 		System.out.println("cmd: get/set/evict/quit/exit/help");
