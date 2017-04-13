@@ -96,7 +96,7 @@ public class RedisCacheChannel extends BinaryJedisPubSub implements CacheExpired
 			}
 
 		}
-		log.trace("[%s,%s,L%d]=>%s\n", obj.getRegion(), obj.getKey(), obj.getLevel(), obj.getValue());
+		log.trace("[{},{},L{}]={}\n", obj.getRegion(), obj.getKey(), obj.getLevel(), obj.getValue());
 		return obj;
 	}
 
